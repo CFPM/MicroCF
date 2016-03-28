@@ -1,0 +1,12 @@
+{
+    "name" : "micro",
+    "version" : "master",
+    "main": "router",
+    "repository" : "https://github.com/Prefinem/MicroCF",
+
+    "author": "William Giles",
+    "homepage": "https://github.com/Prefinem",
+    "description" : "A Coldfusion Micro Framework",
+    "keywords" : "MVC, Router, Micro Framework, Framework, Micro MVC",
+    "license" : "MIT"
+}
