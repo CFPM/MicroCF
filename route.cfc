@@ -43,9 +43,9 @@ component {
 	}
 
 	public function run(requestCollection){
-		for(var class in this.middleware){
-			this.middlewareClasses[class] = new '#class#'();
-			this.middlewareClasses[class].before(arguments.requestCollection);
+		for(var i = ArrayLen(this.middleware); i >= 1; i--){
+			this.middlewareClasses[this.middleware[i]] = new '#this.middleware[i]#'();
+			this.middlewareClasses[this.middleware[i]].after(arguments.requestCollection);
 		}
 
 		for(param in this.params){
@@ -55,7 +55,7 @@ component {
 		var controller = new '#this.controllerClass#'();
 		controller[this.controllerMethod](arguments.requestCollection, this.paramValues);
 
-		for(var i = ArrayLen(this.middleware); i >= 1; i--){
+		for(var i = 1; i <= ArrayLen(this.middleware); i++){
 			this.middlewareClasses[this.middleware[i]].after(arguments.requestCollection);
 		}
 	}

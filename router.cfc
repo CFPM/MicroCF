@@ -23,9 +23,9 @@ component {
 
 	public function run(){
 		var routeFound = false;
-		for(var class in this.middleware){
-			this.middlewareClasses[class] = new '#class#'();
-			this.middlewareClasses[class].before(this.requestCollection);
+		for(var i = ArrayLen(this.middleware); i >= 1; i--){
+			this.middlewareClasses[this.middleware[i]] = new '#this.middleware[i]#'();
+			this.middlewareClasses[this.middleware[i]].after(this.requestCollection);
 		}
 
 		var currentRoute = CGI.REQUEST_URL.replace(CGI.HTTP_HOST,'').replace('http://','').replace('https://', '');
@@ -50,7 +50,7 @@ component {
 		}
 
 
-		for(var i = ArrayLen(this.middleware); i >= 1; i--){
+		for(var i = 1; i <= ArrayLen(this.middleware); i++){
 			this.middlewareClasses[this.middleware[i]].after(this.requestCollection);
 		}
 	}
