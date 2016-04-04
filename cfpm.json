@@ -1,7 +1,7 @@
 {
     "name" : "micro",
     "version" : "master",
-    "main": "router",
+    "main": "micro",
     "repository" : "https://github.com/Prefinem/MicroCF",
 
     "author": "William Giles",

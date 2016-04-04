@@ -1,10 +1,12 @@
 component {
 
 	this.middleware = [];
+	this.middlewareParams = {};
 	this.params = [];
 	this.paramValues = {};
 
 	public function init(HTTPMethod, URLRoute, controller){
+		this.HTTPMethod = arguments.HTTPMethod;
 		this.URLRoute = arguments.URLRoute;
 		this.controllerMethod = parseMethod(controller);
 		this.controllerClass = parseClass(controller, this.controllerMethod);
@@ -15,6 +17,9 @@ component {
 	}
 
 	public function matchURL(currentURL){
+		if(CGI.REQUEST_METHOD != this.HTTPMethod){
+			return false;
+		}
 		this.regexRoute = this.URLRoute;
 		var output = REFind("{([^}]*)}", this.regexRoute, 1, true);
 		while(StructKeyExists(output, 'pos') && output.pos[1] != 0){
@@ -37,26 +42,43 @@ component {
 		return false;
 	}
 
-	public function addMiddleware(middleware){
+	public function addMiddleware(middleware, params = {}){
 		ArrayAppend(this.middleware, arguments.middleware);
+		this.middlewareParams[arguments.middleware] = arguments.params;
+		return this;
+	}
+
+	public function removeMiddleware(middleware){
+		ArrayDelete(this.middleware, arguments.middleware);
 		return this;
 	}
 
 	public function run(requestCollection){
-		for(var i = ArrayLen(this.middleware); i >= 1; i--){
-			this.middlewareClasses[this.middleware[i]] = new '#this.middleware[i]#'();
-			this.middlewareClasses[this.middleware[i]].after(arguments.requestCollection);
-		}
-
 		for(param in this.params){
 			this.controllerClass = this.controllerClass.replace(param, this.paramValues[param]);
 			this.controllerMethod = this.controllerMethod.replace(param, this.paramValues[param]);
 		}
+
+		arguments.requestCollection.CONTROLLERCLASS = this.CONTROLLERCLASS;
+		arguments.requestCollection.CONTROLLERMETHOD = this.CONTROLLERMETHOD;
+		arguments.requestCollection.HTTPMETHOD = this.HTTPMETHOD;
+		arguments.requestCollection.PARAMS = this.PARAMS;
+		arguments.requestCollection.URLROUTE = this.URLROUTE;
+		arguments.requestCollection.PARAMVALUES = this.PARAMVALUES;
+
 		var controller = new '#this.controllerClass#'();
+
+		for(var i = ArrayLen(this.middleware); i >= 1; i--){
+			var middleware = this.middleware[i];
+			this.middlewareClasses[middleware] = new '#middleware#'();
+			this.middlewareClasses[middleware].before(controller, arguments.requestCollection, this.middlewareParams[middleware]);
+		}
+
 		controller[this.controllerMethod](arguments.requestCollection, this.paramValues);
 
 		for(var i = 1; i <= ArrayLen(this.middleware); i++){
-			this.middlewareClasses[this.middleware[i]].after(arguments.requestCollection);
+			var middleware = this.middleware[i];
+			this.middlewareClasses[middleware].after(controller, arguments.requestCollection, this.middlewareParams[middleware]);
 		}
 	}
 

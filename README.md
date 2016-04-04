@@ -18,7 +18,7 @@ Micro CF is installed using CFPM or can be downloaded from source
 
 ###Routes
 
-Routes are adding using the addRoute method of MicroCF.  addRoute requires three parameters: HTTP Method, URL Route, Component.Method.  As a general rule, I suggest keeping your controllers in a single folder at the root directory called controllers.  You can add any hierarchical folder structure inside the controller folder to keep things organized.
+Routes are adding using the addRoute method of MicroCF.  addRoute requires three parameters: HTTP Method, URL Route, Component.Method.  __As a general rule, I suggest keeping your controllers in a single folder at the root directory called controllers.  You can add any hierarchical folder structure inside the controller folder to keep things organized.__
 
 Routes themselves can be dynamic.  This is what make MicroCF so powerful.  Using a simple notation, I can easily define multiple routes.  On top of that, the parameters of the routes are passed into the controller method along with a Request Collection.  Example:
 
@@ -42,15 +42,15 @@ We can also add dynamic controllers info MicroCF:
 
     micro.addRoute('GET', '/{controller}/{method}', 'controllers.{controller}.{method}');
 
-This allows use to hit an URL like /user/edit which would hit the controllers.user component and execute the edit method
+This allows us to hit an URL like /user/edit which would hit the controllers.user component and execute the edit method
 
 ###Middleware
 
-Middleware allows you to execute code before and after your application has run.  This allows you to build tools such as authentication, cross-site request protection, permissions, or something else.  Middleware can be applied to the request as a whole or to individual routes for more specific applications.
+Middleware allows you to execute code before and after your application has run.  This allows you to build tools such as authentication, cross-site request protection, permissions, or something else.  Middleware can be applied to the request as a whole or to individual routes for more specific applications. It should be noted that middleware applied to the micro component only get's applied to routes that come after the middleware.  This gives you some flexibility in covering a majority of your site, but not everything. (ie. public pages versus rest of site)
 
 ![Middleware](http://www.slimframework.com/docs/images/middleware.png)
 
-Middleware requires two methods called 'before' and 'after'.  These accept one parameter called 'requestCollection' which can be used for passing information throughout the application.  To use an application wide middleware, you would attach it directly to the MicroCF Class.
+Middleware requires two methods called 'before' and 'after'.  These accept three parameters. First is the controller itself which allows you to get route information.  The second is the request collection, which can be used for passing information throughout the application.  The third is any parameters you passed to the middleware when using addMiddleware().  To use an application wide middleware, you would attach it directly to the MicroCF Class.
 
     var micro = application.cfpm.require('micro');
     micro.addMiddleware('middleware.authentication');
