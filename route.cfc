@@ -17,7 +17,7 @@ component {
 	}
 
 	public function matchURL(currentURL){
-		if(CGI.REQUEST_METHOD != this.HTTPMethod){
+		if(CGI.REQUEST_METHOD != this.HTTPMethod && this.HTTPMethod != 'ANY'){
 			return false;
 		}
 		this.regexRoute = this.URLRoute;
@@ -64,7 +64,12 @@ component {
 		arguments.requestCollection.HTTPMETHOD = this.HTTPMETHOD;
 		arguments.requestCollection.PARAMS = this.PARAMS;
 		arguments.requestCollection.URLROUTE = this.URLROUTE;
+		for(key in this.PARAMVALUES){
+			var newKey = key.replace('{','').replace('}','');
+			this.PARAMVALUES[newKey] = this.PARAMVALUES[key];
+		}
 		arguments.requestCollection.PARAMVALUES = this.PARAMVALUES;
+
 
 		var controller = new '#this.controllerClass#'();
 
@@ -74,7 +79,17 @@ component {
 			this.middlewareClasses[middleware].before(controller, arguments.requestCollection, this.middlewareParams[middleware]);
 		}
 
+		//Check if Pre method exists and run
+		if(StructKeyExists(controller, 'pre')){
+			controller.pre(arguments.requestCollection, this.paramValues);
+		}
+
 		controller[this.controllerMethod](arguments.requestCollection, this.paramValues);
+
+		//Check if Post method exists and run
+		if(StructKeyExists(controller, 'post')){
+			controller.post(arguments.requestCollection, this.paramValues);
+		}
 
 		for(var i = 1; i <= ArrayLen(this.middleware); i++){
 			var middleware = this.middleware[i];

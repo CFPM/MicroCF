@@ -1,7 +1,6 @@
 {
     "name" : "micro",
     "version" : "master",
-    "main": "micro",
     "repository" : "https://github.com/Prefinem/MicroCF",
 
     "author": "William Giles",

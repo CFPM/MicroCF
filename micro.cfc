@@ -51,8 +51,17 @@ component {
 		}
 		if(!routeFound){
 			if(this.notFoundController != '' && this.notFoundMethod != ''){
+				for(var i = ArrayLen(this.middleware); i >= 1; i--){
+					var middleware = this.middleware[i];
+					this.middlewareClasses[middleware] = new '#middleware#'();
+					this.middlewareClasses[middleware].before(this.notFoundController, this.requestCollection, this.middlewareParams[middleware]);
+				}
 				var notFound = new "#this.notFoundController#"();
 				notFound[this.notFoundMethod](this.requestCollection);
+				for(var i = 1; i <= ArrayLen(this.middleware); i++){
+					var middleware = this.middleware[i];
+					this.middlewareClasses[middleware].after(this.notFoundController, this.requestCollection, this.middlewareParams[middleware]);
+				}
 			}else{
 				throw(msg="Route not found, 404");
 			}

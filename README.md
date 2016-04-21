@@ -12,7 +12,13 @@ Micro CF is installed using CFPM or can be downloaded from source
 
 ##Usage
 
-    var micro = application.cfpm.require('micro');
+In application.cfc:
+
+    application.require = new cfpm();
+
+Elsewhere:
+
+    var micro = application.require('micro');
     micro.addRoute('GET', '/', 'controllers.Index.home');
     micro.run();
 
@@ -52,7 +58,7 @@ Middleware allows you to execute code before and after your application has run.
 
 Middleware requires two methods called 'before' and 'after'.  These accept three parameters. First is the controller itself which allows you to get route information.  The second is the request collection, which can be used for passing information throughout the application.  The third is any parameters you passed to the middleware when using addMiddleware().  To use an application wide middleware, you would attach it directly to the MicroCF Class.
 
-    var micro = application.cfpm.require('micro');
+    var micro = application.require('micro');
     micro.addMiddleware('middleware.authentication');
 
 __As a general rules, I suggest keeping your middleware in a single folder at the root directory called middleware.  You can add any hierarchical folder structure inside the controller folder to keep things organized.__
@@ -72,7 +78,7 @@ Or, since addRoute returns and instance of the route, you can assign a middlewar
 
 When you want to fall back gracefully and render a 404 error page, or even redirect when not found to another page, you can use the notFound method.  This method allows you to add a final controller and method for when a route isn't matched.
 
-    var micro = application.cfpm.require('micro');
+    var micro = application.require('micro');
     micro.addRoute('GET', '/', 'controllers.Index.home');
     micro.notFound('controller.Index.fourOhFour');
     micro.run();
