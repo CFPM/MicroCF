@@ -25,7 +25,7 @@ component {
 		while(StructKeyExists(output, 'pos') && output.pos[1] != 0){
 			var param = Mid(this.regexRoute, output.pos[1], output.len[1]);
 			ArrayAppend(this.params, param);
-			this.regexRoute = this.regexRoute.replace(param, '([a-zA-Z0-9]+)');
+			this.regexRoute = this.regexRoute.replace(param, '(.+)');
 			output = REFind("{([^}]*)}", this.regexRoute, 1, true);
 		}
 		this.regexRoute = '^' & this.regexRoute & '$';
