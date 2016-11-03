@@ -44,7 +44,7 @@ component {
 		this.requestCollection.path = currentRoute;
 
 		for(var route in this.routes){
-			if(route.matchURL(currentRoute)){
+			if(route.matchURL(currentRoute) && !routeFound){
 				routeFound = true;
 				route.run(this.requestCollection);
 			}
