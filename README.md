@@ -87,3 +87,46 @@ When you want to fall back gracefully and render a 404 error page, or even redir
 
 After you have applied all your routes, middleware and your notFound page, you still need to call one last method that run MicroCF.  This is the run method. (See Previous Examples)
 
+##Example
+
+
+
+-----
+
+For this example, we will be using MicroCF - Our Micro Framework for creating a simple web site.
+
+    cfpm micro
+
+-----
+
+file: ***application.cfc***
+
+    component {
+        application.cfpm = new cfpm();
+    }
+
+-----
+
+file: ***index.cfm***
+
+    <cfscript>
+    micro = application.cfpm.require('micro',{baseDir: GetDirectoryFromPath(GetCurrentTemplatePath())});
+    micro.addRoute('GET', '/', 'controllers.Index.home');
+    micro.notFound('controllers.Index.fourOhFour');
+    micro.run();
+    return true;
+    </cfscript>
+
+-----
+
+file: ***controllers/index.cfc***
+
+    component {
+        function home(rc){
+            WriteOutput('Hello World');
+        }
+        function fourOhFour(rc){
+            WriteOutput('Oh No! Page Not Found.');
+        }
+    }
+
