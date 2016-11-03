@@ -4,11 +4,11 @@ Micro CF is a Coldfusion Micro Framework.  It essentially provides the C in MVC 
 
 ##Installation
 
-Micro CF is installed using CFPM or can be downloaded from source
+MicroCF is installed using CFPM or can be downloaded from source
 
 ###CFPM
 
-    python cfpm.py require micro
+    cfpm add micro
 
 ##Usage
 
