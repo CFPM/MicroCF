@@ -36,9 +36,15 @@ component {
 		var routeFound = false;
 
 		var currentRoute = CGI.REQUEST_URL.replace(CGI.HTTP_HOST,'').replace('http://','').replace('https://', '');
+		if(currentRoute == ''){
+			currentRoute = CGI.SCRIPT_NAME & CGI.PATH_INFO;
+		}
 		var pos = FindNoCase('.cfm', currentRoute);
 		if(pos > 1){
 			currentRoute = RemoveChars(currentRoute, 1, pos + 3);
+			if(currentRoute == ''){
+				currentRoute = '/';
+			}
 		}
 		currentRoute = listToArray(currentRoute,'?')[1];
 		this.requestCollection.path = currentRoute;
@@ -57,13 +63,14 @@ component {
 					this.middlewareClasses[middleware].before(this.notFoundController, this.requestCollection, this.middlewareParams[middleware]);
 				}
 				var notFound = new "#this.notFoundController#"();
-				notFound[this.notFoundMethod](this.requestCollection);
+				var temp = notFound[this.notFoundMethod];
+				temp(this.requestCollection);
 				for(var i = 1; i <= ArrayLen(this.middleware); i++){
 					var middleware = this.middleware[i];
 					this.middlewareClasses[middleware].after(this.notFoundController, this.requestCollection, this.middlewareParams[middleware]);
 				}
 			}else{
-				throw(msg="Route not found, 404");
+				throw(message="Route not found, 404");
 			}
 		}
 

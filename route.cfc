@@ -70,7 +70,6 @@ component {
 		}
 		arguments.requestCollection.PARAMVALUES = this.PARAMVALUES;
 
-
 		var controller = new '#this.controllerClass#'();
 
 		for(var i = ArrayLen(this.middleware); i >= 1; i--){
@@ -84,7 +83,8 @@ component {
 			controller.pre(arguments.requestCollection, this.paramValues);
 		}
 
-		controller[this.controllerMethod](arguments.requestCollection, this.paramValues);
+		var temp = controller[this.controllerMethod];
+		temp(arguments.requestCollection, this.paramValues);
 
 		//Check if Post method exists and run
 		if(StructKeyExists(controller, 'post')){
